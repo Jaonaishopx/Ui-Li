@@ -46,43 +46,8 @@ local Library = {
     ScreenGui = ScreenGui;
 };
 
-local RainbowStep = 2
+local RainbowStep = 0
 local Hue = 0
-
-task.spawn(function()
-    --Library:Notify("RGB GUI : Activate")
-    while game:GetService("RunService").RenderStepped:Wait() do
-        if Toggles.RGB_GUI.Value then
-            local Registry = Window.Holder.Visible and Library.Registry or Library.HudRegistry
-            for Idx, Object in next, Registry do
-                for Property, ColorIdx in next, Object.Properties do
-                    if ColorIdx == "AccentColor" or ColorIdx == "AccentColorDark" then
-                        local Instance = Object.Instance
-                        local yPos = Instance.AbsolutePosition.Y
-
-                        local Mapped = Library:MapValue(yPos, 0, 1080, 0, 0.5) * 0.69
-                        local Color = Color3.fromHSV((Library.CurrentRainbowHue - Mapped) % 1, 0.43, 1)
-
-                        if ColorIdx == "AccentColorDark" then
-                            Color = Library:GetDarkerColor(Color)
-                        end
-                        Instance[Property] = Color
-                    end
-                end
-            end
-        else
-            Options.AccentColor:SetValueRGB(Color3.fromRGB(0, 180, 240))
-            Library.AccentColor = Color3.fromRGB(0, 180, 240)
-            Options.OutlineColor:SetValueRGB(Color3.fromRGB(0, 0, 5))
-            Library.OutlineColor = Color3.fromRGB(0, 0, 5)
-            Library.InlineColor = Color3.fromRGB(10, 30, 40)
-            Options.MainColor:SetValueRGB(Color3.fromRGB(0, 15, 30))
-            Library.MainColor = Color3.fromRGB(0, 15, 30)
-            Options.BackgroundColor:SetValueRGB(Color3.fromRGB(5, 5, 20))
-            Library.BackgroundColor = Color3.fromRGB(5, 5, 20)
-            Library.AccentColorDark = Library:GetDarkerColor(Library.AccentColor);
-            Library:UpdateColorsUsingRegistry()
-        end
 
 table.insert(Library.Signals, RenderStepped:Connect(function(Delta)
     RainbowStep = RainbowStep + Delta
@@ -3669,5 +3634,3 @@ Players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
 return Library
-
-end)
